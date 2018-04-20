@@ -97,6 +97,6 @@ public class JSONParser {
 
     // For test only
     public static void main(String[] argv) {
-        JSONParser.generateGestureObj("test");
+        JSONParser.generateGestureObj("json/A/1");
     }
 }
