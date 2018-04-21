@@ -26,7 +26,7 @@ public class JSONParser {
         // Setup the logger
         try {
             SAGLogger.setup();
-            LOGGER.setLevel(Level.INFO);
+            LOGGER.setLevel(Level.SEVERE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,6 +64,7 @@ public class JSONParser {
 
             maxX = Math.max(maxX, coor.getX());
             maxY = Math.max(maxY, coor.getY());
+            positions.add(coor);
         }
 
         LOGGER.info(String.format("Successfully Generated Gesture with %d positions for Folder \"%s\".\n",
