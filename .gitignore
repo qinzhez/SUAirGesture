@@ -3,6 +3,11 @@
 *.iml
 out
 
+# Eclipse project files
+.classpath
+.project
+.settings
+
 # data but not to upload
 *.mov
 *.avi
