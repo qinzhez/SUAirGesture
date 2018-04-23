@@ -142,11 +142,6 @@ public class Gesture {
         for (int i = 0; i < positions.size(); ++i) {
             Coordinate curr = positions.get(i);
 
-            // Deal with invalid Coordinates
-            if (curr.getX() == 0 && curr.getY() == 0) {
-                continue;
-            }
-
             double curr_x = curr.getX() - minX;
             double curr_y = curr.getY() - minY;
 
