@@ -1,8 +1,10 @@
-package features;
+package utilities;
 
+import features.Coordinate;
+import features.Gesture;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utilities.SAGLogger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,6 +61,9 @@ public class JSONParser {
 
         for (File file : jsonList) {
             Coordinate coor = generateCoordinate(file);
+            if (coor.getX() == 0 && coor.getY() == 0) {
+                continue;
+            }
             minX = Math.min(minX, coor.getX());
             minY = Math.min(minY, coor.getY());
 

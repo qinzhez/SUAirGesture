@@ -2,6 +2,7 @@
 .idea
 *.iml
 out
+lombok-plugin
 
 # Eclipse project files
 .classpath
