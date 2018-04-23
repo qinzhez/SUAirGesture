@@ -17,8 +17,11 @@ public class Gesture {
 
     @Getter @Setter private ArrayList<Coordinate> positions;
 
-    private double xRange;
-    private double yRange;
+    @Getter @Setter private double xRange;
+    @Getter @Setter private double yRange;
+
+    @Getter @Setter private int valid_cnt;
+
 
     /* Euclid Speed Components */
     public double avg_euclid_speed;
@@ -35,6 +38,12 @@ public class Gesture {
     public double max_y_manhattan_speed;
     public double min_y_manhattan_speed = Double.MAX_VALUE;
 
+    /* Frequency Matrix */
+    public double[] matrix_100;
+    public double[] matrix_64;
+    public double[] matrix_36;
+    public double[] matrix_16;
+
     public Gesture(final double minX, final double minY, final double maxX, final double maxY,
                    final ArrayList<Coordinate> positions) {
         this.minX = minX;
@@ -45,6 +54,12 @@ public class Gesture {
 
         xRange = maxX - minX;
         yRange = maxY - minY;
+        valid_cnt = positions.size();
+
+        matrix_100 = new double[100];
+        matrix_64 = new double[64];
+        matrix_36 = new double[36];
+        matrix_16 = new double[16];
     }
 
     /* Populate all Speed Components */
@@ -56,9 +71,7 @@ public class Gesture {
         double total_x_manhattan_speed = 0;
         double total_y_manhattan_speed = 0;
 
-        int count = 0;
         Coordinate prev = positions.get(0);
-
         for (int i = 1; i < positions.size(); ++i) {
 
             // Deal with invalid Coordinates
@@ -67,7 +80,6 @@ public class Gesture {
                 continue;
             }
 
-            ++count;
             Coordinate curr = positions.get(i);
             x_var = (Math.abs(curr.getX() - prev.getX())) / xRange;
             y_var = (Math.abs(curr.getY() - prev.getY())) / yRange;
@@ -87,9 +99,9 @@ public class Gesture {
         }
 
 
-        avg_euclid_speed = total_euclid_speed / count * 30;
-        avg_x_manhattan_speed = total_x_manhattan_speed / count * 30;
-        avg_y_manhattan_speed = total_y_manhattan_speed / count * 30;
+        avg_euclid_speed = total_euclid_speed / valid_cnt * 30;
+        avg_x_manhattan_speed = total_x_manhattan_speed / valid_cnt * 30;
+        avg_y_manhattan_speed = total_y_manhattan_speed / valid_cnt * 30;
 
         max_euclid_speed *= 30;
         max_x_manhattan_speed *= 30;
@@ -98,6 +110,9 @@ public class Gesture {
         min_euclid_speed *= 30;
         min_x_manhattan_speed *= 30;
         min_y_manhattan_speed *= 30;
+
+        System.out.println(String.format("X Range: %.5f.\n", xRange));
+        System.out.println(String.format("Y Range: %.5f.\n", yRange));
 
         System.out.println(String.format("Average Euclid Speed: %.5f.\n", avg_euclid_speed));
         System.out.println(String.format("Average Y Manhattan Speed: %.5f.\n", avg_y_manhattan_speed));
@@ -109,9 +124,53 @@ public class Gesture {
         System.out.println(String.format("Min y Manhattan Speed: %.5f.\n", min_y_manhattan_speed));
     }
 
+    /* Populate all Frequency Matrix Components */
+    public void populateMatrixes() {
 
+        double x_unit_100 = xRange / 9.9;
+        double y_unit_100 = yRange / 9.9;
+
+        double x_unit_64 = xRange / 7.9;
+        double y_unit_64 = yRange / 7.9;
+
+        double x_unit_36 = xRange / 5.9;
+        double y_unit_36 = yRange / 5.9;
+
+        double x_unit_16 = xRange / 3.9;
+        double y_unit_16 = yRange / 3.9;
+
+        for (int i = 0; i < positions.size(); ++i) {
+            Coordinate curr = positions.get(i);
+
+            // Deal with invalid Coordinates
+            if (curr.getX() == 0 && curr.getY() == 0) {
+                continue;
+            }
+
+            double curr_x = curr.getX() - minX;
+            double curr_y = curr.getY() - minY;
+
+            int x_count_100 = (int) (curr_x / x_unit_100);
+            int y_count_100 = (int) (curr_y / y_unit_100);
+            int x_count_64 = (int) (curr_x / x_unit_64);
+            int y_count_64 = (int) (curr_y / y_unit_64);
+            int x_count_36 = (int) (curr_x / x_unit_36);
+            int y_count_36 = (int) (curr_y / y_unit_36);
+            int x_count_16 = (int) (curr_x / x_unit_16);
+            int y_count_16 = (int) (curr_y / y_unit_16);
+
+            matrix_100[10 * y_count_100 + x_count_100] += 1.0 / valid_cnt;
+            matrix_64[8 * y_count_64 + x_count_64] += 1.0 / valid_cnt;
+            matrix_36[6 * y_count_36 + x_count_36] += 1.0 / valid_cnt;
+            matrix_16[4 * y_count_16 + x_count_16] += 1.0 / valid_cnt;
+        }
+
+
+    }
+
+    // For test only
     public static void main(String[] argv) {
-        Gesture gesture = JSONParser.generateGestureObj("json/test_speed");
-        gesture.populateSpeed();
+        Gesture gesture = JSONParser.generateGestureObj("json/identity/1");
+        gesture.populateMatrixes();
     }
 }
