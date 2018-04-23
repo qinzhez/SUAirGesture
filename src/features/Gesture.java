@@ -74,12 +74,6 @@ public class Gesture {
         Coordinate prev = positions.get(0);
         for (int i = 1; i < positions.size(); ++i) {
 
-            // Deal with invalid Coordinates
-            if (prev.getX() == 0 && prev.getY() == 0) {
-                prev = positions.get(i);
-                continue;
-            }
-
             Coordinate curr = positions.get(i);
             x_var = (Math.abs(curr.getX() - prev.getX())) / xRange;
             y_var = (Math.abs(curr.getY() - prev.getY())) / yRange;
