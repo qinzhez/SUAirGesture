@@ -1,8 +1,10 @@
-package features;
+package utilities;
 
+import features.Coordinate;
+import features.Gesture;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utilities.SAGLogger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;

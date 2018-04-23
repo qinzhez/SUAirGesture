@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 import lombok.Setter;
+import utilities.JSONParser;
 
 /**
  * Created by JOHNNY on 4/19/18.
