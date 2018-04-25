@@ -109,6 +109,20 @@ public class Gesture {
         System.out.println(String.format("Min y Manhattan Speed: %.5f.\n", min_y_manhattan_speed));
     }
 
+    public ArrayList<Double> getSpeed(){
+    	ArrayList<Double> speed = new ArrayList<Double>();
+    	speed.add(avg_euclid_speed);
+    	speed.add(min_euclid_speed);
+    	speed.add(max_euclid_speed);
+    	speed.add(avg_x_manhattan_speed);
+    	speed.add(min_x_manhattan_speed);
+    	speed.add(max_x_manhattan_speed);
+    	speed.add(avg_y_manhattan_speed);
+    	speed.add(min_y_manhattan_speed);
+    	speed.add(max_y_manhattan_speed);
+    	return speed;
+    }
+
 
     public static void main(String[] argv) {
         Gesture gesture = JSONParser.generateGestureObj("json/test_speed");

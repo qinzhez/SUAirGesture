@@ -1,8 +1,9 @@
 package features;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import lombok.Setter;
+import lombok.*;
 
 /**
  *
@@ -13,7 +14,8 @@ import lombok.Setter;
  */
 
 public class Distance {
-	private ArrayList<Double> attributes;
+	@Getter
+	private Double[] attributes;
 	@Setter
 	private Gesture gesture;
 
@@ -26,25 +28,26 @@ public class Distance {
 	public Distance(Gesture g) throws InterruptedException {
 		this.gesture = new Gesture(g.getMinX(), g.getMinY(), g.getMaxX(), g.getMaxY(),
 				new ArrayList<Coordinate>(g.getPositions()));
-		attributes.ensureCapacity(15);
+		attributes = new Double[15];
 		calculate();
 	}
 
 	@Override
 	public String toString() {
-		if (attributes.isEmpty())
+		ArrayList<Double> attris = new ArrayList<Double>(Arrays.asList(attributes));
+		if (attris.isEmpty())
 			return null;
 
 		String str = new String();
-		str += "STD to Vertical Central Line\tSTD to Horizontal Central Line\\tRatio A1\t"
-				+ "Ratio A2\tRatio A3\tRatio A4\tRatio A5\t"
-				+ "Large Drift from Max Horizontally\tLarge Drift from Max Vertically\t"
-				+ "Small Drift from Max Horizontally\tSmall Drift from Max Vertically\t"
-				+ "Large Drift from Average Horizontally\tLarge Drift from Average Vertically\t"
-				+ "Small Drift from Average Horizontally\tSmall Drift from Average Vertically\t";
+		str += "STD to Vertical Central Line,STD to Horizontal Central Line,Ratio A1,"
+				+ "Ratio A2,Ratio A3,Ratio A4,Ratio A5,"
+				+ "Large Drift from Max Horizontally,Large Drift from Max Vertically,"
+				+ "Small Drift from Max Horizontally,Small Drift from Max Vertically,"
+				+ "Large Drift from Average Horizontally,Large Drift from Average Vertically,"
+				+ "Small Drift from Average Horizontally,Small Drift from Average Vertically,";
 
 		for (Double attr : attributes) {
-			str += attr + "\t";
+			str += attr + ",";
 		}
 		return str;
 	}
@@ -125,12 +128,12 @@ public class Distance {
 		}
 		horizon = Math.sqrt(horizon / count);
 		vertical = Math.sqrt(vertical / count);
-		attributes.add(0, vertical);
-		attributes.add(1, horizon);
+		attributes[0] = vertical;
+		attributes[1] = horizon;
 	}
 
 	private void ratio() {
-		int splitIndex = gesture.getPositions().size() / 4;
+		int splitIndex = gesture.getPositions().size() / 5;
 		double maxX = Double.MIN_VALUE, maxY = Double.MIN_VALUE;
 		double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE;
 		int area = 1;
@@ -138,7 +141,7 @@ public class Distance {
 		for (int index = 0; index < gesture.getPositions().size(); index++) {
 			if (index != 0 && area < 5 && index % splitIndex == 0) {
 				double ratio = (maxX - minX) / (maxY - minY);
-				attributes.add(area + 1, ratio);
+				attributes[area + 1] = ratio;
 				area++;
 				maxX = Double.MIN_VALUE;
 				maxY = Double.MIN_VALUE;
@@ -157,7 +160,7 @@ public class Distance {
 				minY = cur.getY();
 		}
 		double ratio = (maxX - minX) / (maxY - minY);
-		attributes.add(area + 1, ratio);
+		attributes[area + 1] = ratio;
 	}
 
 	private void drift() {
@@ -167,30 +170,30 @@ public class Distance {
 			uX += cur.getX();
 			uY += cur.getY();
 		}
-		uX = uX/gesture.getPositions().size();
-		uY = uY/gesture.getPositions().size();
+		uX = uX / gesture.getPositions().size();
+		uY = uY / gesture.getPositions().size();
 
-		for(Coordinate cur:gesture.getPositions()) {
+		for (Coordinate cur : gesture.getPositions()) {
 			LH += cur.getX() * cur.getX() / (gesture.getMaxX() - gesture.getMinX());
 			LV += cur.getY() * cur.getY() / (gesture.getMaxY() - gesture.getMinY());
-			SH += cur.getX() * Math.abs(1-cur.getX() / (gesture.getMaxX() - gesture.getMinX()));
-			SV +=cur.getY() * Math.abs(1-cur.getY() / (gesture.getMaxY() - gesture.getMinY()));
+			SH += cur.getX() * Math.abs(1 - cur.getX() / (gesture.getMaxX() - gesture.getMinX()));
+			SV += cur.getY() * Math.abs(1 - cur.getY() / (gesture.getMaxY() - gesture.getMinY()));
 		}
 
-		attributes.add(7,LH);
-		attributes.add(8,LV);
-		attributes.add(9,SH);
-		attributes.add(10,SV);
+		attributes[7]= LH;
+		attributes[8]= LV;
+		attributes[9]= SH;
+		attributes[10]=SV;
 
-		for(Coordinate cur:gesture.getPositions()) {
+		for (Coordinate cur : gesture.getPositions()) {
 			LH += cur.getX() * cur.getX() / uX;
 			LV += cur.getY() * cur.getY() / uY;
-			SH += cur.getX() * Math.abs(1-cur.getX() / uX);
-			SV +=cur.getY() * Math.abs(1-cur.getY() / uY);
+			SH += cur.getX() * Math.abs(1 - cur.getX() / uX);
+			SV += cur.getY() * Math.abs(1 - cur.getY() / uY);
 		}
-		attributes.add(11,LH);
-		attributes.add(12,LV);
-		attributes.add(13,SH);
-		attributes.add(14,SV);
+		attributes[11]= LH;
+		attributes[12]= LV;
+		attributes[13]= SH;
+		attributes[14]= SV;
 	}
 }
