@@ -1,8 +1,10 @@
-package features;
+package utilities;
 
+import features.Coordinate;
+import features.Gesture;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utilities.SAGLogger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,6 +61,9 @@ public class JSONParser {
 
         for (File file : jsonList) {
             Coordinate coor = generateCoordinate(file);
+            if (coor.getX() == 0 && coor.getY() == 0) {
+                continue;
+            }
             minX = Math.min(minX, coor.getX());
             minY = Math.min(minY, coor.getY());
 
@@ -89,10 +94,10 @@ public class JSONParser {
         obj.getFloat("version");
         JSONArray people = obj.getJSONArray("people");
         JSONArray right_hand_arr = people.getJSONObject(0).getJSONArray("hand_right_keypoints_2d");
-        double x = right_hand_arr.getDouble(15);
-        double y = right_hand_arr.getDouble(16);
+        double x = right_hand_arr.getDouble(21);
+        double y = right_hand_arr.getDouble(22);
 
-        LOGGER.info(String.format("X: %.2f, Y:%.2f\n", x, y));
+        LOGGER.info(String.format("%s\nX: %.2f, Y:%.2f\n", file.getName(), x, y));
         return new Coordinate(x, y);
     }
 
