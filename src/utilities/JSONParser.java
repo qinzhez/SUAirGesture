@@ -94,8 +94,8 @@ public class JSONParser {
         obj.getFloat("version");
         JSONArray people = obj.getJSONArray("people");
         JSONArray right_hand_arr = people.getJSONObject(0).getJSONArray("hand_right_keypoints_2d");
-        double x = right_hand_arr.getDouble(21);
-        double y = right_hand_arr.getDouble(22);
+        double x = right_hand_arr.getDouble(25);
+        double y = right_hand_arr.getDouble(26);
 
         LOGGER.info(String.format("%s\nX: %.2f, Y:%.2f\n", file.getName(), x, y));
         return new Coordinate(x, y);

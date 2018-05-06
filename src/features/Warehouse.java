@@ -86,7 +86,7 @@ public class Warehouse {
 			Gesture gesture = null;
 			if(i != 4)
 				for(int j=0;j<5;j++) {
-					gesture = JSONParser.generateGestureObj("json/identity/"+i+suffix[j]);
+					gesture = JSONParser.generateGestureObj("json/A/"+i+suffix[j]);
 					gesture.populateSpeed();
 					try {
 						Warehouse wh = new Warehouse(gesture);
@@ -97,7 +97,7 @@ public class Warehouse {
 					}
 				}
 			else {
-				gesture = JSONParser.generateGestureObj("json/identity/"+i);
+				gesture = JSONParser.generateGestureObj("json/A/"+i);
 				gesture.populateSpeed();
 				try {
 					Warehouse wh = new Warehouse(gesture);
